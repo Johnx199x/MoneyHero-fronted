@@ -1,0 +1,30 @@
+:root {
+    /* Primary Colors */
+    --emerald: #10b981;
+    --emerald-light: #34d399;
+    --gold: #fbbf24;
+    --gold-light: #fcd34d;
+    --mystic-blue: #3b82f6;
+    --mystic-blue-light: #60a5fa;
+
+    /* Secondary Colors */
+    --danger: #ef4444;
+    --danger-light: #f87171;
+    --purple: #8b5cf6;
+    --purple-light: #a78bfa;
+    --orange: #f97316;
+    --orange-light: #fb923c;
+
+    /* Backgrounds & Neutrals */
+    --bg-primary: #0f0f23;
+    --bg-secondary: #1a1a3a;
+    --bg-card: #2d31376b;
+    --text-secondary: #9ca6bb;
+    --text-primary: #ffffff;
+
+    /* Gradients */
+    --gradient-money: linear-gradient(45deg, var(--emerald), var(--emerald-light));
+    --gradient-gold: linear-gradient(45deg, var(--gold), var(--gold-light));
+    --gradient-magic: linear-gradient(45deg, var(--mystic-blue), var(--mystic-blue-light));
+    --gradient-danger: linear-gradient(45deg, var(--danger), var(--danger-light));
+}

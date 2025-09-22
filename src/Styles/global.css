@@ -1,0 +1,32 @@
+.section-title {
+    font-size: 2rem;
+    color: var(--text-primary);
+}
+
+.section-title-2 {
+    font-size: 1.8rem;
+    color: var(--text-primary);
+
+    @media(max-width: 768px) {
+        font-size: 1.5rem;
+    }
+}
+
+.img-mockup {
+    border-radius: 1.5rem;
+    margin: 3rem 0 2rem 0;
+    transform: rotate(4deg);
+    transition: all 0.3s;
+    max-height: 400px;
+    max-width: 1200px;
+
+    @media (max-width: 768px) {
+        margin-top: 2rem;
+        max-height: 600px;
+        max-width: 375px;
+    }
+}
+
+.img-mockup:hover {
+    transform: rotate(0deg) scale(1.02);
+}

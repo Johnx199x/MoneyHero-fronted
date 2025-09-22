@@ -1,0 +1,11 @@
+.home-page {
+
+    margin: 0 auto;
+    width: 85dvw;
+    display: flex;
+    padding-top: 3rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
