@@ -1,0 +1,75 @@
+.featurePreview-section {
+    scroll-margin-top: 80px;
+}
+
+.features-grid {
+    display: grid;
+    row-gap: 1rem;
+    column-gap: 2rem;
+    align-items: center;
+    margin-top: 2rem;
+
+}
+
+.feature-image {
+    border-radius: 1rem;
+}
+
+.feature-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+}
+
+.feature-text {
+    text-align: left;
+
+}
+
+.feature-text-reverse {
+    order: -1;
+}
+
+.feature-title {
+    font-size: 1.5rem;
+    font-family: 'font-gamer', sans-serif;
+    color: #F59E0B;
+    margin-bottom: 1rem;
+}
+
+.feature-description {
+    font-size: 1.125rem;
+    color: #D1D5DB;
+    line-height: 1.6;
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+    .features-grid {
+        width: 90%;
+        margin: 0 auto;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .feature-title {
+        font-size: 1.875rem;
+    }
+
+    .feature-description {
+        font-size: 1.25rem;
+    }
+
+    .feature-text {
+        order: 0;
+    }
+}
+
+/* Large desktop styles */
+@media (min-width: 1024px) {
+    .feature-title {
+        font-size: 2rem;
+    }
+}

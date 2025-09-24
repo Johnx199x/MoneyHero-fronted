@@ -32,7 +32,8 @@ export default function HowItWork() {
     ]
 
 	return (
-		<section className='howItWork-section'>
+		// biome-ignore lint/correctness/useUniqueElementIds: <explanation>
+<section className='howItWork-section' id='how-it-works' style={{scrollMarginTop:'80px'}}>
 			<span className='section-title'>Tired of boring spreadsheets?</span>
         {cardsTired.map((card)=>(
             <Card key={card.title}  title={card.title} description={card.description}  />

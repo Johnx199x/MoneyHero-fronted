@@ -3,6 +3,7 @@
     margin: 0 auto;
     width: 85dvw;
     display: flex;
+    gap: 30px;
     padding-top: 3rem;
     flex-direction: column;
     justify-content: center;
