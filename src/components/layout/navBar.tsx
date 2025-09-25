@@ -1,4 +1,3 @@
-// src/components/layout/NavBar.tsx
 import { useState } from 'react';
 import './NavBar.css';
 
@@ -50,7 +49,7 @@ export default function NavBar() {
 
         {/* Desktop Navigation */}
         <div className="navbar-menu">
-              {<NavLinks />}
+              <NavLinks />
           
         </div>
 
