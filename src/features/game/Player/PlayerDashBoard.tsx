@@ -137,7 +137,7 @@ const AddMoneyModal = ({
 };
 
 export default function SimpleDashboard() {
-	const {addExp, addMoney, spendMoney } = usePlayerStore();
+	const {addMoney, spendMoney } = usePlayerStore();
 
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [showSpendForm, setShowSpendForm] = useState(false);
@@ -148,7 +148,6 @@ export default function SimpleDashboard() {
 		const num = parseFloat(amount);
 		if (num > 0) {
 			addMoney(num);
-			addExp(num);
 			setAmount('');
 			setDescription('');
 			setShowAddForm(false);
@@ -214,7 +213,7 @@ export default function SimpleDashboard() {
 			{/* Tip */}
 			<div className='tip-section'>
 				<strong className='tip-highlight'>💡 Tip:</strong> You gain 1 EXP for
-				every $10 you add. Level up every 100 EXP!
+				every $10 you add.
 			</div>
 		</section>
 	);

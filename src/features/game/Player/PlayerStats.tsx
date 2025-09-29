@@ -5,7 +5,7 @@ import './PlayerStats.css'
 
 export default function PlayerStats(){
 
-    const {playerName, money, level, exp,expToNextLevel,porcentLevel, setPlayerName}= usePlayerStore()
+    const {playerName, money, debt,level, exp,expToNextLevel,percentLevel, setPlayerName}= usePlayerStore()
 
     const [showNameEdit, setShowNameEdit] = useState(false);
 	const [newName, setNewName] = useState(playerName);
@@ -54,6 +54,11 @@ export default function PlayerStats(){
 						<span style={{display:"block"}} className='stat-label'>Money</span>
 						<span style={{display:"block"}} className='stat-value money'>${money.toLocaleString()}</span>
 					</div>
+                    <div className='stat-card money'>
+						<span style={{display:"block"}} className='stat-icon'>💰</span>
+						<span style={{display:"block"}} className='stat-label'>Debt</span>
+						<span style={{display:"block"}} className='stat-value debt'>${debt.toLocaleString()}</span>
+					</div>
 
 					<div className='stat-card level'>
 						<span style={{display:"block"}} className='stat-icon'>⚡</span>
@@ -75,11 +80,11 @@ export default function PlayerStats(){
 					<div className='progress-labels'>
 						<span>Level {level}</span>
 						<span>
-							{porcentLevel}% to Level {level + 1}
+							{percentLevel}% to Level {level + 1}
 						</span>
 					</div>
 					<div className='progress-bar-container'>
-						<div className='progress-bar-fill' style={{ width: `${porcentLevel}%` }} />
+						<div className='progress-bar-fill' style={{ width: `${percentLevel}%` }} />
 					</div>
 				</div>
 			</div>
