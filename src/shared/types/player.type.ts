@@ -1,3 +1,4 @@
+import type { Transaction } from './index.type';
 export interface PlayerStats {
 	level: number;
 	hp: number; // Health Points (dinero actual)
@@ -29,18 +30,7 @@ export interface Quest {
 	isCompleted: boolean;
 	deadline?: Date;
 }
-export interface Transaction {
-	id: string;
-	type: 'income' | 'expense';
-	amount: number;
-	category: string;
-	description: string;
-	date: Date;
 
-	battleResult: 'victory' | 'defeat' | 'critical';
-	expGained: number;
-	damageDealt?: number;
-}
 export interface PlayerState {
 	//player data
 	playerName: string;

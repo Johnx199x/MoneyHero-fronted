@@ -6,7 +6,6 @@ import './PlayerStats.css'
 export default function PlayerStats(){
 
     const {playerName, money, debt,level, exp,expToNextLevel,percentLevel, setPlayerName}= usePlayerStore()
-
     const [showNameEdit, setShowNameEdit] = useState(false);
 	const [newName, setNewName] = useState(playerName);
 
@@ -55,9 +54,9 @@ export default function PlayerStats(){
 						<span style={{display:"block"}} className='stat-value money'>${money.toLocaleString()}</span>
 					</div>
                     <div className='stat-card money'>
-						<span style={{display:"block"}} className='stat-icon'>💰</span>
+						<span style={{display:"block"}} className='stat-icon'>💸</span>
 						<span style={{display:"block"}} className='stat-label'>Debt</span>
-						<span style={{display:"block"}} className='stat-value debt'>${debt.toLocaleString()}</span>
+						<span style={{display:"block"}} className='stat-value debt'>${debt}</span>
 					</div>
 
 					<div className='stat-card level'>

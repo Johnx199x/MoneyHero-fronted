@@ -1,6 +1,7 @@
 // src/store/playerStore.ts - Versión SUPER SIMPLE
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { Transaction } from '../../../../shared/types/index.type';
 
 interface PlayerState {
 	// Datos básicos
@@ -11,11 +12,13 @@ interface PlayerState {
 	percentLevel: number;
 	exp: number;
 	expToNextLevel: number;
+	transactionHistory: Transaction[];
 
 	// Acciones básicas
 	setPlayerName: (name: string) => void;
-	addMoney: (amount: number) => void;
-	spendMoney: (amount: number) => void;
+	addMoney: (amount: number) => { gainedExp: number };
+	spendMoney: (amount: number) => { losedExp: number; isDebt: boolean };
+	addTransaction: (transaction: Transaction) => void;
 	addExp: (amount: number) => void;
 	loseExp: (amount: number) => void;
 }
@@ -34,57 +37,88 @@ export const usePlayerStore = create<PlayerState>()(
 		(set, get) => ({
 			// Estado inicial
 			playerName: 'Hero',
-			money: 1000,
+			money: 0,
 			debt: 0,
 			level: 1,
 			exp: 0,
 			percentLevel: 0,
 			expToNextLevel: config.baseExp,
+			transactionHistory: [],
 
 			// Acciones
+
+			addTransaction: transaction => {
+				const state = get();
+				const transactionHistory = state.transactionHistory;
+				const newTransactionHistory = [...transactionHistory, transaction];
+
+				if (transaction.type === 'income') {
+					const result = state.addMoney(transaction.amount);
+
+					transaction.expGained = result.gainedExp;
+					transaction.battleResult = 'victory';
+				} else {
+					const result = state.spendMoney(transaction.amount);
+					transaction.expLoosed = result.losedExp;
+					transaction.battleResult = result.isDebt ? 'critical' : 'defeat';
+				}
+
+				transaction.id = crypto.randomUUID();
+
+				set({
+					transactionHistory: newTransactionHistory,
+				});
+			},
+
 			setPlayerName: name => set({ playerName: name }),
 
 			addMoney: amount => {
 				const state = get();
 				let debt = state.debt;
 				let newMoney = state.money;
+				let gainedExp = (amount - debt) * config.expGainRate;
 
 				if (debt !== 0) {
 					if (debt - amount < 0) {
 						newMoney = amount - debt;
-						state.addExp(amount - debt);
+						state.addExp(gainedExp);
 						debt = 0;
 					} else debt -= amount;
 				} else {
 					newMoney = state.money + amount;
-					state.addExp(amount);
+					gainedExp = amount * config.expGainRate;
+					state.addExp(gainedExp);
 				}
 
 				set({
 					money: newMoney,
 					debt,
 				});
+				return { gainedExp };
 			},
 
 			spendMoney: amount => {
 				const state = get();
 				const newMoney = Math.max(0, state.money - amount);
+				let isDebt = false;
 				let newDebt = state.debt;
+				const expLoosed = (amount - state.money) * config.expLossRate;
 
 				if (state.money - amount < 0) {
 					newDebt += amount - state.money;
-					state.loseExp(amount - state.money);
+					isDebt = true;
+
+					state.loseExp(expLoosed);
 				}
 
 				set({ money: newMoney, debt: newDebt });
+				return { losedExp: expLoosed, isDebt };
 			},
 
 			addExp: amount => {
-				const expGained = amount * config.expGainRate;
-
 				const state = get();
 
-				let newExp = state.exp + expGained;
+				let newExp = state.exp + amount;
 				let newLevel = state.level;
 				let newExpToNextLevel = state.expToNextLevel;
 
@@ -94,6 +128,7 @@ export const usePlayerStore = create<PlayerState>()(
 					newLevel += 1;
 					newExpToNextLevel = getExpForLevel(newLevel);
 				}
+
 				set({
 					exp: Math.floor(newExp),
 					percentLevel: Math.floor((newExp / newExpToNextLevel) * 100),
@@ -102,26 +137,24 @@ export const usePlayerStore = create<PlayerState>()(
 				});
 			},
 			loseExp: amount => {
-				let expLoosed = amount * config.expLossRate;
-
 				const state = get();
 
 				let newExp = state.exp;
 				let newLevel = state.level;
 				let newExpToNextLevel = state.expToNextLevel;
 
-				while (expLoosed > 0) {
-					if (newExp > expLoosed) {
-						newExp -= expLoosed;
-						expLoosed = 0;
+				while (amount > 0) {
+					if (newExp > amount) {
+						newExp -= amount;
+						amount = 0;
 					} else {
-						if (newLevel === 1 && expLoosed > newExp) {
+						if (newLevel === 1 && amount > newExp) {
 							newExp = 0;
-							expLoosed = 0;
+							amount = 0;
 							break;
 						}
 						newLevel--;
-						expLoosed -= newExp;
+						amount -= newExp;
 						newExpToNextLevel = getExpForLevel(newLevel);
 						newExp = newExpToNextLevel;
 					}

@@ -1,0 +1,98 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-title {
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+}
+
+.modal-title.add-money {
+    color: var(--emerald);
+}
+
+.modal-title.spend-money {
+    color: var(--danger);
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group:last-of-type {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.form-input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--bg-primary);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--emerald);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+}
+
+.modal-btn.cancel {
+    background: transparent;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+}
+
+.modal-btn.submit {
+    color: white;
+}
+
+.modal-btn.submit.add-money {
+    background: var(--gradient-money);
+}
+
+.modal-btn.submit.spend-money {
+    background: var(--gradient-danger);
+}
