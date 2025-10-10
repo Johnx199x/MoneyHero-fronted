@@ -4,10 +4,16 @@
 import './TransactionSystem.css';
 import type React from 'react';
 import { useState } from 'react';
-import { expenseCategories, incomeCategories } from '../../../shared/constants';
-import type { Category, Transaction } from '../../../shared/types/index.type';
+import {
+	expenseCategories,
+	incomeCategories,
+} from '../../../../shared/constants';
+import type {
+	Category,
+	Transaction,
+} from '../../../../shared/types/index.type';
+import { usePlayerStore } from '../store/playerStore';
 import TransactionForm from './Components/TransactionForm';
-import { usePlayerStore } from './store/playerStore';
 
 interface ModalProps {
 	setShowForm: (show: boolean) => void;

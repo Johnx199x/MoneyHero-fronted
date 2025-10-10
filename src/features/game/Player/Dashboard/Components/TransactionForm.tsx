@@ -2,7 +2,7 @@
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
 
-import type { Category, Transaction } from "../../../../shared/types/index.type";
+import type { Category, Transaction } from "../../../../../shared/types/index.type";
 
 interface transactionFormProps{
     newTransaction: Transaction;

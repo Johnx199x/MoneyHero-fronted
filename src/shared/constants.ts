@@ -20,3 +20,14 @@ export const expenseCategories = [
 	'debt',
 	'other',
 ] as const;
+
+export const NavLandingLinks = [
+	{ name: 'Home', to: 'home' },
+	{ name: 'How It Works', to: 'how-it-works' },
+	{ name: 'Features', to: 'features' },
+];
+export const NavGameLinks = [
+	{ name: 'Dashboard', to: 'dashboard' },
+	{ name: 'Analytics', to: 'analytics' },
+	{ name: 'BattleLog', to: 'battleLogs' },
+];

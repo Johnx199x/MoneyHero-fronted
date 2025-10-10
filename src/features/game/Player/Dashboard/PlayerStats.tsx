@@ -1,5 +1,5 @@
 import {useState} from "react"
-import { usePlayerStore } from "./store/playerStore";
+import { usePlayerStore } from "../store/playerStore";
 import './PlayerStats.css'
 
 
@@ -15,7 +15,8 @@ export default function PlayerStats(){
 	};
 
     return(
-        <div className='player-header'>
+        // biome-ignore lint/correctness/useUniqueElementIds: <explanation>
+<div className='player-header' id="dashboard">
 				<span className='player-title-section'>
 					<h1 className='player-title'>⚔️ {playerName}</h1>
 
@@ -47,6 +48,7 @@ export default function PlayerStats(){
 				</span>
 
 				{/* Stats Grid */}
+				
 				<div className='stats-grid'>
 					<div className='stat-card money'>
 						<span style={{display:"block"}} className='stat-icon'>💰</span>

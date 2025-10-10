@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './PlayerDashboard.css';
-import PlayerHistory from './PlayerHistory';
+import PlayerHistory from '../TransactionHistory/PlayerHistory';
 import PlayerStats from './PlayerStats';
 import {TransactionSystem } from './TransactionSystem';
 
@@ -40,8 +40,6 @@ export default function SimpleDashboard() {
 			{showSpendForm && (
 				<TransactionSystem type='expense' setShowForm={setShowSpendForm} />
 			)}
-			{/* History */}
-			<PlayerHistory />
 
 			{/* Tip */}
 			<div className='tip-section'>

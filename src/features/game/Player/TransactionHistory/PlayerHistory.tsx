@@ -1,8 +1,9 @@
+/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 import { useMemo, useState } from 'react';
 import TransactionCard from './Components/TransactionCard';
 import './PlayerHistory.css';
-import type { Category } from '../../../shared/types/transaction';
-import { usePlayerStore } from './store/playerStore';
+import type { Category } from '../../../../shared/types/transaction';
+import { usePlayerStore } from '../store/playerStore';
 
 export default function PlayerHistory() {
 	const { transactionHistory } = usePlayerStore();
@@ -60,7 +61,7 @@ export default function PlayerHistory() {
 	}, [transactionHistory, activeFilter]);
 
 	return (
-		<section className='history-section'>
+		<section className='history-section' id='battleLogs'>
 			<span className='section-title-2'>Transaction History</span>
 
 			{/* Filters */}

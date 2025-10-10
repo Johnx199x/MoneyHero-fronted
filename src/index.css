@@ -1,8 +1,13 @@
 body {
+  padding-top: 60px;
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   color: #dddddd;
   font-family: sans-serif;
   background-color: var(--bg-primary);
+}
+
+html {
+  scroll-padding-top: 70px;
 }

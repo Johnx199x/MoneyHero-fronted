@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './NavBar.css';
 import { Link, useLocation } from 'react-router-dom';
+import { NavGameLinks, NavLandingLinks } from '../../shared/constants';
 import NavButton from '../ui/NavButton';
 
-function NavLinksLanding({ closeMenu }: { closeMenu?: () => void }) {
+function NavLinks({
+	closeMenu,
+	links,
+}: {
+	closeMenu?: () => void;
+	links: { name: string; to: string }[];
+}) {
 	function scrollInto(zone: string) {
 		document.getElementById(zone)?.scrollIntoView({ behavior: 'smooth' });
 		if (closeMenu) closeMenu();
@@ -11,32 +18,31 @@ function NavLinksLanding({ closeMenu }: { closeMenu?: () => void }) {
 
 	return (
 		<>
-			<button
-				type='button'
-				onClick={() => scrollInto('home')}
-				className='navbar-link'>
-				Home
-			</button>
-			<button
-				type='button'
-				onClick={() => scrollInto('how-it-works')}
-				className='navbar-link'>
-				How It Works
-			</button>
-			<button
-				type='button'
-				onClick={() => scrollInto('features')}
-				className='navbar-link'>
-				Features
-			</button>
-			<NavButton navTo='dashboard' />
+			{links.map(link => (
+				<button
+					key={link.name}
+					type='button'
+					onClick={() => scrollInto(link.to)}
+					className='navbar-link'>
+					{link.name}
+				</button>
+			))}
+			{location.pathname === '/' && <NavButton navTo='dashboard' />}
 		</>
 	);
 }
+
 export default function NavBar() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 	const location = useLocation().pathname;
+
+	useEffect(() => {
+		const link = location === '/' ? NavLandingLinks : NavGameLinks;
+		setLink(link);
+	}, [location]);
+
+	const [links, setLink] = useState(NavLandingLinks);
 
 	const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
 	return (
@@ -44,7 +50,7 @@ export default function NavBar() {
 			<div className='navbar-container'>
 				{/* Logo/Brand */}
 				<div className='navbar-brand'>
-					<Link to={"/"} style={{textDecoration:"none"}}>
+					<Link to={'/'} style={{ textDecoration: 'none' }}>
 						<span className='brand-icon'>⚔️</span>
 						<span className='brand-text'>MoneyHero</span>
 					</Link>
@@ -52,7 +58,7 @@ export default function NavBar() {
 
 				{/* Desktop Navigation */}
 				<div className='navbar-menu'>
-					{location === '/' ? <NavLinksLanding /> : ''}
+					<NavLinks links={links} />
 				</div>
 
 				{/* Mobile Menu Button */}
@@ -67,7 +73,7 @@ export default function NavBar() {
 			{/* Mobile Menu */}
 			{isMobileMenuOpen && (
 				<div className='mobile-menu'>
-					<NavLinksLanding closeMenu={toggleMobileMenu} />
+					<NavLinks closeMenu={toggleMobileMenu} links={links} />
 				</div>
 			)}
 		</nav>

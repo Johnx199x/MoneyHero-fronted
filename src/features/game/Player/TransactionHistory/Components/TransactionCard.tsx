@@ -1,6 +1,6 @@
 import './TransactionCard.css';
-import type { Transaction } from '../../../../shared/types/index.type';
-import { usePlayerStore } from '../store/playerStore';
+import type { Transaction } from '../../../../../shared/types/index.type';
+import { usePlayerStore } from '../../store/playerStore';
 
 interface transactionCardProps {
     battleIcon: string
