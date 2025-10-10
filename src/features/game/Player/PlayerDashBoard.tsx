@@ -1,15 +1,12 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import './PlayerDashboard.css';
-import { AddTransaction } from './AddTransaction';
 import PlayerHistory from './PlayerHistory';
 import PlayerStats from './PlayerStats';
+import {TransactionSystem } from './TransactionSystem';
 
 export default function SimpleDashboard() {
-	
-
 	const [showAddForm, setShowAddForm] = useState(false);
 	const [showSpendForm, setShowSpendForm] = useState(false);
-	
 
 	return (
 		<section className='dashboard-container'>
@@ -36,19 +33,12 @@ export default function SimpleDashboard() {
 
 			{/* Add Money Modal */}
 			{showAddForm && (
-				<AddTransaction
-					type='income'
-					setShowForm={setShowAddForm}
-				
-				/>
+				<TransactionSystem type='income' setShowForm={setShowAddForm} />
 			)}
 
 			{/* Spend Money Modal */}
 			{showSpendForm && (
-				<AddTransaction
-					type='expense'
-					setShowForm={setShowSpendForm}
-				/>
+				<TransactionSystem type='expense' setShowForm={setShowSpendForm} />
 			)}
 			{/* History */}
 			<PlayerHistory />

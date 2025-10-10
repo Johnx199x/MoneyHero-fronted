@@ -47,3 +47,19 @@
 .button-x:hover {
     transform: translateY(-2px);
 }
+
+.small-btn {
+    background: transparent;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.small-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+}

@@ -19,6 +19,7 @@ interface PlayerState {
 	addMoney: (amount: number) => { gainedExp: number };
 	spendMoney: (amount: number) => { losedExp: number; isDebt: boolean };
 	addTransaction: (transaction: Transaction) => void;
+	deleteTransaction: (id: string) => void;
 	addExp: (amount: number) => void;
 	loseExp: (amount: number) => void;
 }
@@ -69,6 +70,74 @@ export const usePlayerStore = create<PlayerState>()(
 					transactionHistory: newTransactionHistory,
 				});
 			},
+			deleteTransaction: (id: string) => {
+				const state = get();
+				const transaction = state.transactionHistory.find(t => t.id === id);
+
+				if (!transaction) return;
+
+				const newHistory = state.transactionHistory.filter(t => t.id !== id);
+
+				let money = 0;
+				let debt = 0;
+				let exp = 0;
+				let level = 1;
+				let expToNextLevel = config.baseExp;
+
+				const sortedHistory = [...newHistory].sort(
+					(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+				);
+
+				for (const t of sortedHistory) {
+					if (t.type === 'income') {
+						if (debt > 0) {
+							if (debt >= t.amount) {
+								debt -= t.amount;
+							} else {
+								const remaining = t.amount - debt;
+								debt = 0;
+								money += remaining;
+								exp += remaining * config.expGainRate;
+							}
+						} else {
+							money += t.amount;
+							exp += t.amount * config.expGainRate;
+						}
+					} else {
+						if (money >= t.amount) {
+							money -= t.amount;
+						} else {
+							const shortage = t.amount - money;
+							money = 0;
+							debt += shortage;
+							exp -= shortage * config.expLossRate;
+							exp = Math.max(0, exp); // No puede ser negativa
+						}
+					}
+
+					while (exp >= expToNextLevel) {
+						exp -= expToNextLevel;
+						level++;
+						expToNextLevel = getExpForLevel(level);
+					}
+
+					while (exp < 0 && level > 1) {
+						level--;
+						expToNextLevel = getExpForLevel(level);
+						exp += expToNextLevel;
+					}
+				}
+
+				set({
+					transactionHistory: newHistory,
+					money: Math.floor(money),
+					debt: Math.floor(debt),
+					exp: Math.floor(exp),
+					level,
+					expToNextLevel: Math.floor(expToNextLevel),
+					percentLevel: Math.floor((exp / expToNextLevel) * 100),
+				});
+			},
 
 			setPlayerName: name => set({ playerName: name }),
 
@@ -102,11 +171,12 @@ export const usePlayerStore = create<PlayerState>()(
 				const newMoney = Math.max(0, state.money - amount);
 				let isDebt = false;
 				let newDebt = state.debt;
-				const expLoosed = (amount - state.money) * config.expLossRate;
+				let expLoosed = 0;
 
 				if (state.money - amount < 0) {
 					newDebt += amount - state.money;
 					isDebt = true;
+					expLoosed = (amount - state.money) * config.expLossRate;
 
 					state.loseExp(expLoosed);
 				}
