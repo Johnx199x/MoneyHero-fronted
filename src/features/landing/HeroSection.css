@@ -43,3 +43,23 @@
         font-size: 1.2rem;
     }
 }
+
+.hero-picture {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-img {
+    width: 60%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+
+    @media(max-width: 768px) {
+        width: 90%;
+        margin-top: 1rem;
+    }
+}

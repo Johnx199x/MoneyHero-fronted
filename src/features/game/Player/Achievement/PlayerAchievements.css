@@ -1,0 +1,379 @@
+.achievements-section {
+    width: 85%;
+    margin: 2rem auto;
+    background: var(--bg-card);
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.achievement-stats {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.achievement-stats span {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.achievement-category {
+    margin-bottom: 2.5rem;
+}
+
+.achievement-category:last-child {
+    margin-bottom: 0;
+}
+
+.achievement-category h3 {
+    font-size: 1.5rem;
+    color: var(--emerald);
+    margin: 0 0 1rem 0;
+    text-transform: capitalize;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--emerald);
+}
+
+
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.achievement-card {
+    position: relative;
+    background: var(--bg-secondary);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    border: 2px solid;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* Rarity Borders */
+.achievement-card.common {
+    border-color: rgba(156, 166, 187, 0.3);
+}
+
+.achievement-card.rare {
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.achievement-card.epic {
+    border-color: rgba(139, 92, 246, 0.4);
+}
+
+.achievement-card.legendary {
+    border-color: rgba(251, 191, 36, 0.5);
+}
+
+/* Unlocked State */
+.achievement-card.unlocked {
+    cursor: pointer;
+}
+
+.achievement-card.unlocked:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.achievement-card.unlocked.common {
+    border-color: var(--text-secondary);
+}
+
+.achievement-card.unlocked.rare {
+    border-color: var(--mystic-blue);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.achievement-card.unlocked.epic {
+    border-color: var(--purple);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+.achievement-card.unlocked.legendary {
+    border-color: var(--gold);
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+/* Locked State */
+.achievement-card.locked {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+.achievement-card .achievement-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.achievement-card h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.achievement-card p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Locked Overlay */
+.locked-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    border-radius: 1rem;
+}
+
+
+/* ============================================
+   RARITY BADGES
+   ============================================ */
+
+.rarity-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rarity-badge.common {
+    background: rgba(156, 166, 187, 0.2);
+    color: var(--text-secondary);
+}
+
+.rarity-badge.rare {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--mystic-blue-light);
+}
+
+.rarity-badge.epic {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--purple-light);
+}
+
+.rarity-badge.legendary {
+    background: rgba(251, 191, 36, 0.2);
+    color: var(--gold-light);
+}
+
+/* ============================================
+   NOTIFICATION CONTAINER (Multiple Toasts)
+   ============================================ */
+
+.achievement-notifications {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 9999;
+}
+
+.achievement-notifications .achievement-toast {
+    position: relative;
+    top: 0;
+    right: 0;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .achievements-section {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    .achievements-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .achievement-card {
+        padding: 1rem;
+    }
+
+    .achievement-card .achievement-icon {
+        font-size: 2.5rem;
+    }
+
+    .achievement-card h4 {
+        font-size: 1rem;
+    }
+
+    .achievement-card p {
+        font-size: 0.8rem;
+    }
+
+    .achievement-toast {
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+        max-width: none;
+    }
+
+    .achievement-notifications {
+        right: 10px;
+        left: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .achievements-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .achievement-toast {
+        padding: 1rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .achievement-icon {
+        font-size: 2.5rem !important;
+    }
+}
+
+/* ============================================
+   SPECIAL EFFECTS FOR LEGENDARY
+   ============================================ */
+
+.achievement-card.unlocked.legendary {
+    position: relative;
+    overflow: hidden;
+}
+
+.achievement-card.unlocked.legendary::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent,
+            rgba(251, 191, 36, 0.1),
+            transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   ACHIEVEMENT TOOLTIP (Optional)
+   ============================================ */
+
+.achievement-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: var(--bg-primary);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 10;
+}
+
+.achievement-card:hover .achievement-tooltip {
+    opacity: 1;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.achievements-empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.achievements-empty h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.achievements-empty p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* ============================================
+   ACHIEVEMENT STATS CARDS
+   ============================================ */
+
+.achievement-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-achievement-card {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-achievement-card .icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.stat-achievement-card .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.stat-achievement-card .label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}

@@ -1,4 +1,6 @@
 import './FeaturePreview.css'
+import dashboardImg from '../../assets/dashboard-img.png'
+import logImg from '../../assets/logAndAchie.png'
 export default function FeaturePreview(){
     return (
         // biome-ignore lint/correctness/useUniqueElementIds: <explanation>
@@ -9,7 +11,7 @@ export default function FeaturePreview(){
                 {/* Image/Mockup Left */}
                 <div className="feature-image">
                     <img 
-                        src="https://placehold.co/800x600/1F2937/F59E0B?text=RPG+Dashboard+Stats"
+                        src={dashboardImg}
                         alt="Dashboard with RPG stats" 
                         className="img-mockup"
                     />
@@ -36,7 +38,7 @@ export default function FeaturePreview(){
                 {/* Image/Mockup Right */}
                 <div className="feature-image">
                     <img 
-                        src="https://placehold.co/800x600/1F2937/F59E0B?text=Combat+Log+%26+Achievements"
+                        src={logImg}
                         alt="Combat log and achievements screen" 
                         className="img-mockup"
                     />

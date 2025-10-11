@@ -1,0 +1,104 @@
+.achievement-toast {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 280px;
+    max-width: 320px;
+    border: 2px solid;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    animation: slideInRight 0.5s ease-out, pulse 0.5s ease-out 0.5s;
+    z-index: 9999;
+}
+
+/* Rarity Colors */
+.achievement-toast.common {
+    border-color: var(--text-secondary);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(156, 166, 187, 0.1) 100%);
+}
+
+.achievement-toast.rare {
+    border-color: var(--mystic-blue);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(59, 130, 246, 0.2) 100%);
+}
+
+.achievement-toast.epic {
+    border-color: var(--purple);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(139, 92, 246, 0.2) 100%);
+}
+
+.achievement-toast.legendary {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(251, 191, 36, 0.2) 100%);
+    box-shadow: 0 8px 24px rgba(251, 191, 36, 0.3);
+}
+
+.achievement-icon {
+    font-size: 3rem;
+    animation: bounceIn 0.6s ease-out;
+}
+
+.achievement-content h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.achievement-name {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.achievement-desc {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}

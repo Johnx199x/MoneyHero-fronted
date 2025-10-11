@@ -1,3 +1,4 @@
+export type { Achievement } from './achievement';
 export type { Category, Transaction } from './transaction';
 
 export interface CardInfo {

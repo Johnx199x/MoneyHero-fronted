@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './NavBar.css';
 import { Link, useLocation } from 'react-router-dom';
-import { NavGameLinks, NavLandingLinks } from '../../shared/constants';
+import { NavGameLinks, NavLandingLinks } from '../../shared/constants/constants';
 import NavButton from '../ui/NavButton';
 
 function NavLinks({

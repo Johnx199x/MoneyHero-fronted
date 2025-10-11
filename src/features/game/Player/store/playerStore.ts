@@ -1,9 +1,10 @@
 // src/store/playerStore.ts - Versión SUPER SIMPLE
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { ACHIEVEMENTS } from '../../../../shared/constants/achievement';
 import type { Transaction } from '../../../../shared/types/index.type';
 
-interface PlayerState {
+export interface PlayerState {
 	// Datos básicos
 	playerName: string;
 	money: number;
@@ -13,8 +14,10 @@ interface PlayerState {
 	exp: number;
 	expToNextLevel: number;
 	transactionHistory: Transaction[];
+	unlockedAchievements: string[];
 
 	// Acciones básicas
+	checkAchievements: () => string[];
 	setPlayerName: (name: string) => void;
 	addMoney: (amount: number) => { gainedExp: number };
 	spendMoney: (amount: number) => { losedExp: number; isDebt: boolean };
@@ -53,8 +56,40 @@ export const usePlayerStore = create<PlayerState>()(
 			percentLevel: 0,
 			expToNextLevel: config.baseExp,
 			transactionHistory: [],
-
+			unlockedAchievements: [],
 			// Acciones
+
+			checkAchievements: () => {
+				const state = get();
+				const newUnlocked: string[] = [];
+
+				ACHIEVEMENTS.forEach(achievement => {
+					const isUnlocked = state.unlockedAchievements.includes(
+						achievement.id,
+					);
+					const meetsCondition = achievement.condition(state);
+
+					if (!isUnlocked && meetsCondition) {
+						newUnlocked.push(achievement.id);
+
+						// Aplicar recompensa si existe
+						if (achievement.reward?.exp) {
+							state.addExp(achievement.reward.exp);
+						}
+					}
+				});
+
+				if (newUnlocked.length > 0) {
+					set({
+						unlockedAchievements: [
+							...state.unlockedAchievements,
+							...newUnlocked,
+						],
+					});
+				}
+
+				return newUnlocked;
+			},
 
 			addTransaction: transaction => {
 				const state = get();
@@ -75,7 +110,9 @@ export const usePlayerStore = create<PlayerState>()(
 				}
 
 				const newTransactionHistory = [...transactionHistory, newTransaction];
-
+				setTimeout(() => {
+					get().checkAchievements();
+				}, 0);
 				set({
 					transactionHistory: newTransactionHistory,
 				});

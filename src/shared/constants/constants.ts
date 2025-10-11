@@ -30,4 +30,5 @@ export const NavGameLinks = [
 	{ name: 'Dashboard', to: 'dashboard' },
 	{ name: 'Analytics', to: 'analytics' },
 	{ name: 'BattleLog', to: 'battleLogs' },
+	{ name: 'Achievements', to: 'achievements' },
 ];

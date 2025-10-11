@@ -62,7 +62,7 @@ export default function PlayerHistory() {
 
 	return (
 		<section className='history-section' id='battleLogs'>
-			<span className='section-title-2'>Transaction History</span>
+			<span className='section-title-2'>Battle Logs</span>
 
 			{/* Filters */}
 			<div className='filters-container'>

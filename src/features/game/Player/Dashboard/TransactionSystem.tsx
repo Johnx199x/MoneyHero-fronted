@@ -7,7 +7,7 @@ import { useState } from 'react';
 import {
 	expenseCategories,
 	incomeCategories,
-} from '../../../../shared/constants';
+} from '../../../../shared/constants/constants';
 import type {
 	Category,
 	Transaction,
