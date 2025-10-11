@@ -4,13 +4,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { NavGameLinks, NavLandingLinks } from '../../shared/constants/constants';
 import NavButton from '../ui/NavButton';
 
-function NavLinks({
-	closeMenu,
-	links,
-}: {
+interface NavLinksProps {
 	closeMenu?: () => void;
 	links: { name: string; to: string }[];
-}) {
+	currentPath: string; // Añadido para pasar la ubicación actual
+}
+
+function NavLinks({ closeMenu, links, currentPath }: NavLinksProps) {
 	function scrollInto(zone: string) {
 		document.getElementById(zone)?.scrollIntoView({ behavior: 'smooth' });
 		if (closeMenu) closeMenu();
@@ -27,24 +27,23 @@ function NavLinks({
 					{link.name}
 				</button>
 			))}
-			{location.pathname === '/' && <NavButton navTo='game' />}
+			{currentPath === '/' && <NavButton navTo='game' />}
 		</>
 	);
 }
 
 export default function NavBar() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-	const location = useLocation().pathname;
-
-	useEffect(() => {
-		const link = location === '/' ? NavLandingLinks : NavGameLinks;
-		setLink(link);
-	}, [location]);
-
+	const location = useLocation();
 	const [links, setLink] = useState(NavLandingLinks);
 
+	useEffect(() => {
+		const link = location.pathname === '/' ? NavLandingLinks : NavGameLinks;
+		setLink(link);
+	}, [location.pathname]);
+
 	const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
+
 	return (
 		<nav className='navbar'>
 			<div className='navbar-container'>
@@ -58,7 +57,7 @@ export default function NavBar() {
 
 				{/* Desktop Navigation */}
 				<div className='navbar-menu'>
-					<NavLinks links={links} />
+					<NavLinks links={links} currentPath={location.pathname} />
 				</div>
 
 				{/* Mobile Menu Button */}
@@ -73,7 +72,11 @@ export default function NavBar() {
 			{/* Mobile Menu */}
 			{isMobileMenuOpen && (
 				<div className='mobile-menu'>
-					<NavLinks closeMenu={toggleMobileMenu} links={links} />
+					<NavLinks 
+						closeMenu={toggleMobileMenu} 
+						links={links} 
+						currentPath={location.pathname} 
+					/>
 				</div>
 			)}
 		</nav>
