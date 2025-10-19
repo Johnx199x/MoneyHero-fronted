@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import { ACHIEVEMENTS } from '../../../../shared/constants/achievement';
 import type { Transaction } from '../../../../shared/types/index.type';
 
@@ -20,8 +20,17 @@ export interface PlayerState {
 	spendMoney: (amount: number) => { losedExp: number; isDebt: boolean };
 	addTransaction: (transaction: Transaction) => void;
 	deleteTransaction: (id: string) => void;
-	addExp: (amount: number) => void;
-	loseExp: (amount: number) => void;
+	addExp: (amount: number) => {
+		newExp: number;
+		newLevel: number;
+		newExpToNextLevel: number;
+	};
+	loseExp: (amount: number) => {
+		newExp: number;
+		newLevel: number;
+		newpercentLevel: number;
+		newExpToNextLevel: number;
+	};
 }
 
 const config = {
@@ -36,46 +45,11 @@ function getExpForLevel(level: number): number {
 }
 
 function generateId(): string {
-	if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+	if (crypto?.randomUUID) {
 		return crypto.randomUUID();
 	}
 	return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
-
-// Storage personalizado con manejo de errores
-const storage = createJSONStorage<PlayerState>(() => ({
-	getItem: (name: string) => {
-		try {
-			const str = localStorage.getItem(name);
-			return str ? JSON.parse(str) : null;
-		} catch (error) {
-			console.error('Error reading from localStorage:', error);
-			// Si hay error, devolver null y el estado inicial se usará
-			return null;
-		}
-	},
-	setItem: (name: string, value: string) => {
-		try {
-			localStorage.setItem(name, value);
-		} catch (error) {
-			console.error('Error writing to localStorage:', error);
-
-			// Si es error de cuota, intentar limpiar espacio
-			if (error instanceof Error && error.name === 'QuotaExceededError') {
-				alert(
-					'Storage is full! Your data might not be saved. Consider exporting your data.',
-				);
-			}
-		}
-	},
-	removeItem: (name: string) => {
-		try {
-			localStorage.removeItem(name);
-		} catch (error) {
-			console.error('Error removing from localStorage:', error);
-		}
-	},
-}));
 
 export const usePlayerStore = create<PlayerState>()(
 	persist(
@@ -95,6 +69,7 @@ export const usePlayerStore = create<PlayerState>()(
 				try {
 					const state = get();
 					const newUnlocked: string[] = [];
+					let totalExpReward = 0; // ✅ Acumular todos los EXP de logros
 
 					ACHIEVEMENTS.forEach(achievement => {
 						try {
@@ -107,7 +82,7 @@ export const usePlayerStore = create<PlayerState>()(
 								newUnlocked.push(achievement.id);
 
 								if (achievement.reward?.exp) {
-									state.addExp(achievement.reward.exp);
+									totalExpReward += achievement.reward.exp;
 								}
 							}
 						} catch (error) {
@@ -119,11 +94,19 @@ export const usePlayerStore = create<PlayerState>()(
 					});
 
 					if (newUnlocked.length > 0) {
+						const expResult = state.addExp(totalExpReward);
+
 						set({
 							unlockedAchievements: [
 								...state.unlockedAchievements,
 								...newUnlocked,
 							],
+							exp: expResult.newExp,
+							level: expResult.newLevel,
+							expToNextLevel: expResult.newExpToNextLevel,
+							percentLevel: Math.floor(
+								(expResult.newExp / expResult.newExpToNextLevel) * 100,
+							),
 						});
 					}
 
@@ -133,7 +116,7 @@ export const usePlayerStore = create<PlayerState>()(
 					return [];
 				}
 			},
-
+			// Función para agregar una transacción
 			addTransaction: transaction => {
 				try {
 					const state = get();
@@ -261,21 +244,42 @@ export const usePlayerStore = create<PlayerState>()(
 					const state = get();
 					let debt = state.debt;
 					let newMoney = state.money;
-					let gainedExp = (amount - debt) * config.expGainRate;
+					let newExp = state.exp;
+					let newLevel = state.level;
+					let newExpToNextLevel = state.expToNextLevel;
+					let gainedExp = 0;
 
 					if (debt !== 0) {
 						if (debt - amount < 0) {
-							newMoney = amount - debt;
-							state.addExp(gainedExp);
+							const remaining = amount - debt;
+							newMoney = remaining;
+							gainedExp = remaining * config.expGainRate;
+
+							const expResult = state.addExp(gainedExp);
+
+							newExp = expResult.newExp;
+							newLevel = expResult.newLevel;
+							newExpToNextLevel = expResult.newExpToNextLevel;
 							debt = 0;
 						} else debt -= amount;
 					} else {
 						newMoney = state.money + amount;
 						gainedExp = amount * config.expGainRate;
-						state.addExp(gainedExp);
+
+						const expResult = state.addExp(gainedExp);
+						newExp = expResult.newExp;
+						newLevel = expResult.newLevel;
+						newExpToNextLevel = expResult.newExpToNextLevel;
 					}
 
-					set({ money: newMoney, debt });
+					set({
+						money: Math.floor(newMoney),
+						debt: Math.floor(debt),
+						exp: newExp,
+						level: newLevel,
+						expToNextLevel: newExpToNextLevel,
+						percentLevel: Math.floor((newExp / newExpToNextLevel) * 100),
+					});
 					return { gainedExp };
 				} catch (error) {
 					console.error('Error adding money:', error);
@@ -289,16 +293,31 @@ export const usePlayerStore = create<PlayerState>()(
 					const newMoney = Math.max(0, state.money - amount);
 					let isDebt = false;
 					let newDebt = state.debt;
+					let newExp = state.exp;
+					let newLevel = state.level;
+					let newExpToNextLevel = state.expToNextLevel;
 					let expLoosed = 0;
 
 					if (state.money - amount < 0) {
 						newDebt += amount - state.money;
 						isDebt = true;
 						expLoosed = (amount - state.money) * config.expLossRate;
-						state.loseExp(expLoosed);
+
+						const expResult = state.loseExp(expLoosed);
+						newExp = expResult.newExp;
+						newLevel = expResult.newLevel;
+						newExpToNextLevel = expResult.newExpToNextLevel;
 					}
 
-					set({ money: newMoney, debt: newDebt });
+					set({
+						money: newMoney,
+						debt: newDebt,
+						exp: newExp,
+						level: newLevel,
+						expToNextLevel: newExpToNextLevel,
+						percentLevel: Math.floor((newExp / newExpToNextLevel) * 100),
+					});
+
 					return { losedExp: expLoosed, isDebt };
 				} catch (error) {
 					console.error('Error spending money:', error);
@@ -307,8 +326,9 @@ export const usePlayerStore = create<PlayerState>()(
 			},
 
 			addExp: amount => {
+				const state = get();
+
 				try {
-					const state = get();
 					let newExp = state.exp + amount;
 					let newLevel = state.level;
 					let newExpToNextLevel = state.expToNextLevel;
@@ -319,20 +339,25 @@ export const usePlayerStore = create<PlayerState>()(
 						newExpToNextLevel = getExpForLevel(newLevel);
 					}
 
-					set({
-						exp: Math.floor(newExp),
-						percentLevel: Math.floor((newExp / newExpToNextLevel) * 100),
-						level: newLevel,
-						expToNextLevel: Math.floor(newExpToNextLevel),
-					});
+					return {
+						newExp: Math.floor(newExp),
+						newLevel,
+						newExpToNextLevel: Math.floor(newExpToNextLevel),
+					};
 				} catch (error) {
 					console.error('Error adding exp:', error);
+					return {
+						newExp: state.exp,
+						newLevel: state.level,
+						newExpToNextLevel: state.expToNextLevel,
+					};
 				}
 			},
 
 			loseExp: amount => {
+				const state = get();
+
 				try {
-					const state = get();
 					let newExp = state.exp;
 					let newLevel = state.level;
 					let newExpToNextLevel = state.expToNextLevel;
@@ -353,21 +378,25 @@ export const usePlayerStore = create<PlayerState>()(
 							newExp = newExpToNextLevel;
 						}
 					}
-
-					set({
-						exp: Math.floor(newExp),
-						level: newLevel,
-						percentLevel: Math.floor((newExp / newExpToNextLevel) * 100),
-						expToNextLevel: newExpToNextLevel,
-					});
+					return {
+						newExp: Math.floor(newExp),
+						newLevel,
+						newpercentLevel: Math.floor((newExp / newExpToNextLevel) * 100),
+						newExpToNextLevel: Math.floor(newExpToNextLevel),
+					};
 				} catch (error) {
 					console.error('Error losing exp:', error);
+					return {
+						newExp: state.exp,
+						newLevel: state.level,
+						newExpToNextLevel: state.expToNextLevel,
+						newpercentLevel: state.percentLevel,
+					};
 				}
 			},
 		}),
 		{
 			name: 'moneyhero-simple-storage',
-			storage: storage,
 			onRehydrateStorage: () => (state, error) => {
 				if (error) {
 					console.error('Error rehydrating storage:', error);

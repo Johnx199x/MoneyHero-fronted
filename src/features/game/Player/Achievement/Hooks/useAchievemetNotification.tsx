@@ -1,18 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePlayerStore } from '../../store/playerStore';
 
 export function useAchievementNotifications() {
   const [notifications, setNotifications] = useState<string[]>([]);
+  const previousAchievementsRef = useRef<string[]>([]);
+  const isInitializedRef = useRef(false);
   const unlockedAchievements = usePlayerStore(state => state.unlockedAchievements);
 
   useEffect(() => {
-    const prevCount = parseInt(localStorage.getItem('achievementCount') || '0');
-    const currentCount = unlockedAchievements.length;
+    if (!isInitializedRef.current) {
+      previousAchievementsRef.current = [...unlockedAchievements];
+      isInitializedRef.current = true;
+      console.log('🎮 Logros iniciales cargados:', unlockedAchievements.length);
+      return;
+    }
 
-    if (currentCount > prevCount) {
-      const newAchievements = unlockedAchievements.slice(prevCount);
+    const newAchievements = unlockedAchievements.filter(
+      id => !previousAchievementsRef.current.includes(id)
+    );
+
+    if (newAchievements.length > 0) {
+      console.log('✨ Nuevos logros desbloqueados:', newAchievements);
       setNotifications(prev => [...prev, ...newAchievements]);
-      localStorage.setItem('achievementCount', currentCount.toString());
+      previousAchievementsRef.current = [...unlockedAchievements];
     }
   }, [unlockedAchievements]);
 

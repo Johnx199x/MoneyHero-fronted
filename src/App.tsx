@@ -6,11 +6,19 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import Footer from './components/layout/Footer';
+import { LoadingScreen } from './components/layout/LoadingScreen';
 import NavBar from './components/layout/NavBar';
 import PlayerDashboard from './features/game/Player/gamePage';
 import { HomePage } from './features/landing/HomePage';
+import { useHydration } from './hooks/useHydration';
 
 function App() {
+	const isMounted = useHydration();
+
+	if (!isMounted) {
+		return <LoadingScreen />;
+	}
+
 	return (
 		<ErrorBoundary>
 			<Router>
@@ -31,7 +39,6 @@ function App() {
 			<Analytics />
 			<SpeedInsights />
 		</ErrorBoundary>
-			
 	);
 }
 
