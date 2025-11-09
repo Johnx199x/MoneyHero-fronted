@@ -6,6 +6,10 @@ Turn your finances into an RPG game. Save money, level up, and track your progre
 
 A finance tracker that works like a video game. Every dollar you save gives you EXP. Every expense is a battle. Level up your financial hero!
 
+## ⚠️ Current Status
+
+This app currently has frontend only - no backend implementation yet. All data is stored locally in your browser.
+
 ## Features
 
 - 💰 Track money and level
