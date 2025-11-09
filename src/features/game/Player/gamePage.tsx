@@ -1,3 +1,4 @@
+import { TransactionProvider } from '../../../context/transationContext';
 import { AchievementToast } from './Achievement/Components/AchievementToast';
 import { useAchievementNotifications } from './Achievement/Hooks/useAchievemetNotification';
 import PlayerAchievements from './Achievement/PlayerAchievements';
@@ -8,7 +9,7 @@ export default function GamePage() {
 	const { notifications, removeNotification } = useAchievementNotifications();
 
 	return (
-		<>
+		<TransactionProvider>
 			<div className='achievement-notifications'>
 				{notifications.map(achievementId => (
 					<AchievementToast
@@ -22,6 +23,6 @@ export default function GamePage() {
 			<PlayerAnalytics />
 			<PlayerHistory />
 			<PlayerAchievements />
-		</>
+		</TransactionProvider>
 	);
 }

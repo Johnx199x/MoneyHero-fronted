@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 import './loginPage.css';
 import { type FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import type { SignUpData } from '../../shared/types/index.type';
 
@@ -8,7 +9,7 @@ export default function SignUp() {
 	const [userName, setUserName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-
+	const navigate = useNavigate();
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 
@@ -27,6 +28,7 @@ export default function SignUp() {
 
 		try {
 			await signUp(userData);
+			navigate('/game', { replace: true });
 		} catch (err: any) {
 			const errorMessage = err.message;
 			setError(errorMessage);

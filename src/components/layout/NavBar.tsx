@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import './NavBar.css';
-import { Link, useLocation } from 'react-router-dom';
-import { NavGameLinks, NavLandingLinks } from '../../shared/constants/constants';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/authContext';
+import {
+	NavGameLinks,
+	NavLandingLinks,
+} from '../../shared/constants/constants';
 import NavButton from '../ui/NavButton';
 
 interface NavLinksProps {
@@ -11,9 +15,12 @@ interface NavLinksProps {
 }
 
 function NavLinks({ closeMenu, links, currentPath }: NavLinksProps) {
+	const { signOut } = useAuth();
+	const navigate = useNavigate()
+
 	function scrollInto(zone: string) {
 		document.getElementById(zone)?.scrollIntoView({ behavior: 'smooth' });
-		if (closeMenu) closeMenu();
+		;
 	}
 
 	return (
@@ -22,7 +29,15 @@ function NavLinks({ closeMenu, links, currentPath }: NavLinksProps) {
 				<button
 					key={link.name}
 					type='button'
-					onClick={() => scrollInto(link.to)}
+					onClick={() =>{
+						if (link.name === 'Sign Out') {
+							signOut()
+							navigate('/')
+						}
+						else scrollInto(link.to)
+						if (closeMenu) closeMenu()
+					}
+					}
 					className='navbar-link'>
 					{link.name}
 				</button>
@@ -35,14 +50,16 @@ function NavLinks({ closeMenu, links, currentPath }: NavLinksProps) {
 export default function NavBar() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const location = useLocation();
-	const [links, setLink] = useState<{name:string , to:string}[] | undefined>(NavLandingLinks);
+	const [links, setLink] = useState<{ name: string; to: string }[] | undefined>(
+		NavLandingLinks,
+	);
 
 	useEffect(() => {
-		let link:{name:string , to:string}[] | undefined
-		if(location.pathname === '/') link = NavLandingLinks
-		else if(location.pathname === '/game') link = NavGameLinks
-		else link = undefined
-		 
+		let link: { name: string; to: string }[] | undefined;
+		if (location.pathname === '/') link = NavLandingLinks;
+		else if (location.pathname === '/game') link = NavGameLinks;
+		else link = undefined;
+
 		setLink(link);
 	}, [location.pathname]);
 
@@ -60,33 +77,32 @@ export default function NavBar() {
 				</div>
 
 				{/* Desktop Navigation */}
-				{links &&
-				(<div className='navbar-menu'>
-					<NavLinks links={links} currentPath={location.pathname} />
-				</div>
+				{links && (
+					<div className='navbar-menu'>
+						<NavLinks links={links} currentPath={location.pathname} />
+					</div>
 				)}
 				{/* Mobile Menu Button */}
-				{links &&( 
-				<button
-					type='button'
-					className='mobile-menu-btn'
-					onClick={toggleMobileMenu}>
-					☰
-				</button>)}
+				{links && (
+					<button
+						type='button'
+						className='mobile-menu-btn'
+						onClick={toggleMobileMenu}>
+						☰
+					</button>
+				)}
 			</div>
-				
+
 			{/* Mobile Menu */}
 			{isMobileMenuOpen && links && (
-
 				<div className='mobile-menu'>
-					<NavLinks 
-						closeMenu={toggleMobileMenu} 
-						links={links} 
-						currentPath={location.pathname} 
+					<NavLinks
+						closeMenu={toggleMobileMenu}
+						links={links}
+						currentPath={location.pathname}
 					/>
 				</div>
 			)}
-		
 		</nav>
 	);
 }

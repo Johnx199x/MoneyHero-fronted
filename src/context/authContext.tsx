@@ -8,7 +8,7 @@ import {
 	useEffect,
 	useState,
 } from 'react';
-import { authService } from '../services/authServices';
+import { authService } from '../services/ApiServices';
 import type {
 	ApiResponse,
 	AuthContextType,
@@ -56,7 +56,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 		try {
 			const response = await authService.signUp(userData);
 			if (response.success) {
+				// biome-ignore lint/style/noNonNullAssertion: <explanation>
+				setUser(response.data!);
+				setIsAuthenticated(true);
 				return response;
+
 			}
 			throw new Error(response.message || 'Error en el registro');
 		} catch (error: unknown) {

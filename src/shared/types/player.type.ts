@@ -30,6 +30,18 @@ export interface Quest {
 	isCompleted: boolean;
 	deadline?: Date;
 }
+export interface IDashboardStats {
+	player_name: string;
+	money: number;
+	debt: number;
+	level: number;
+	percent_level: number;
+	exp: number;
+	exp_to_next_level: number;
+	total_income: number;
+	total_expense: number;
+	total_transactions: number;
+}
 
 export interface PlayerState {
 	//player data

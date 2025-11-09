@@ -1,8 +1,8 @@
 import './TransactionCard.css';
 import { useState } from 'react';
 import ConfirmModal from '../../../../../components/ui/ConfirmationModal';
+import { useTransactionContext } from '../../../../../context/transationContext';
 import type { Transaction } from '../../../../../shared/types/index.type';
-import { usePlayerStore } from '../../store/playerStore';
 
 interface transactionCardProps {
 	battleIcon: string;
@@ -13,11 +13,15 @@ export default function TransactionCard({
 	transaction,
 	battleIcon,
 }: transactionCardProps) {
-	const { deleteTransaction } = usePlayerStore();
+	const { deleteTransaction } = useTransactionContext();
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const handleDelete = (id: string) => {
-		deleteTransaction(id);
-		setShowDeleteModal(false);
+	const handleDelete = async (id: string) => {
+		try {
+			await deleteTransaction(id);
+			setShowDeleteModal(false);
+		} catch (error) {
+			console.error('Failed to delete:', error);
+		}
 	};
 
 	const formatDate = (dateString: string) => {
@@ -28,7 +32,7 @@ export default function TransactionCard({
 			year: 'numeric',
 		});
 	};
-	
+
 	return (
 		<div
 			key={transaction.id}
@@ -59,29 +63,29 @@ export default function TransactionCard({
 
 				<div className='transaction-info'>
 					<span className='info-label'>Battle result:</span>
-					<span className={`battle-result ${transaction.battleResult}`}>
-						{transaction.battleResult === 'victory'
-							? 'Victort'
-							: transaction.battleResult === 'defeat'
+					<span className={`battle-result ${transaction.battle_result}`}>
+						{transaction.battle_result === 'victory'
+							? 'Victory'
+							: transaction.battle_result === 'defeat'
 								? 'Defeat'
 								: 'Critical'}
 					</span>
 				</div>
 
-				{transaction.expGained && (
+				{transaction.exp_gained &&transaction.exp_gained != null && (
 					<div className='transaction-info'>
 						<span className='info-label'>Gained exp:</span>
 						<span className='exp-gained'>
-							+{transaction.expGained.toFixed(2)} EXP
+							+{Number(transaction.exp_gained).toFixed(2)} EXP
 						</span>
 					</div>
 				)}
 
-				{transaction.expLoosed && transaction.battleResult === 'critical' && (
+				{transaction.exp_lost &&transaction.exp_lost != null && transaction.battle_result === 'critical' && (
 					<div className='transaction-info'>
 						<span className='info-label'>Losed exp:</span>
 						<span className='exp-lost'>
-							-{transaction.expLoosed.toFixed(2)} EXP
+							-{Number(transaction.exp_lost).toFixed(2)} EXP
 						</span>
 					</div>
 				)}
@@ -95,23 +99,20 @@ export default function TransactionCard({
 							Delete
 						</button>
 						<ConfirmModal
-						isOpen={showDeleteModal}
-						title='Delete Transaction'
-						message='Are you sure you want to delete this transaction? This action cannot be undone.'
-						icon='🗑️'
-						confirmText='Delete'
-						cancelText='Cancel'
-						onConfirm={() => handleDelete(transaction.id)}
-						onCancel={() => setShowDeleteModal(false)}
-					/>
+							isOpen={showDeleteModal}
+							title='Delete Transaction'
+							message='Are you sure you want to delete this transaction? This action cannot be undone.'
+							icon='🗑️'
+							confirmText='Delete'
+							cancelText='Cancel'
+							onConfirm={() => handleDelete(transaction.id)}
+							onCancel={() => setShowDeleteModal(false)}
+						/>
 					</div>
-					
 
 					<span>{formatDate(transaction.date)}</span>
 				</div>
 			</div>
 		</div>
-		
 	);
-	
 }

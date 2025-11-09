@@ -127,12 +127,14 @@ export const usePlayerStore = create<PlayerState>()(
 
 					if (newTransaction.type === 'income') {
 						const result = state.addMoney(newTransaction.amount);
-						newTransaction.expGained = result.gainedExp;
-						newTransaction.battleResult = 'victory';
+						newTransaction.exp_gained = result.gainedExp;
+						newTransaction.battle_result = 'victory';
 					} else {
 						const result = state.spendMoney(newTransaction.amount);
-						newTransaction.expLoosed = result.losedExp;
-						newTransaction.battleResult = result.isDebt ? 'critical' : 'defeat';
+						newTransaction.exp_lost = result.losedExp;
+						newTransaction.battle_result = result.isDebt
+							? 'critical'
+							: 'defeat';
 					}
 
 					const newTransactionHistory = [...transactionHistory, newTransaction];

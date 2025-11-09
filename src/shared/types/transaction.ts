@@ -30,7 +30,11 @@ export interface Transaction {
 	description?: string;
 	date: string;
 
-	battleResult: 'victory' | 'defeat' | 'critical';
-	expGained?: number;
-	expLoosed?: number;
+	battle_result: 'victory' | 'defeat' | 'critical';
+	exp_gained?: number;
+	exp_lost?: number;
+}
+export interface IFilter {
+	type?: 'income' | 'expense' | undefined;
+	category?: string | undefined;
 }

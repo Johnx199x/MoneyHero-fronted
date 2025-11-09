@@ -2,11 +2,13 @@
 import { useMemo, useState } from 'react';
 import TransactionCard from './Components/TransactionCard';
 import './PlayerHistory.css';
-import type { Category } from '../../../../shared/types/transaction';
-import { usePlayerStore } from '../store/playerStore';
+import { useTransactionContext } from '../../../../context/transationContext';
+import type { Category } from '../../../../shared/types/index.type';
 
 export default function PlayerHistory() {
-	const { transactionHistory } = usePlayerStore();
+	const {
+		transactions: transactionHistory,
+	} = useTransactionContext();
 
 	type FilterType = 'income' | 'expense' | 'all';
 
@@ -39,7 +41,8 @@ export default function PlayerHistory() {
 		setActiveFilter(prev => ({ ...prev, category }));
 	};
 	const filteredTransactions = useMemo(() => {
-		return transactionHistory.filter(transaction => {
+	return transactionHistory
+		.filter(transaction => {
 			// Filter by type (income/expense)
 			if (activeFilter.type !== 'all') {
 				if (activeFilter.type === 'income' && transaction.type !== 'income')
@@ -57,8 +60,9 @@ export default function PlayerHistory() {
 			}
 
 			return true;
-		});
-	}, [transactionHistory, activeFilter]);
+		})
+		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}, [transactionHistory, activeFilter]);
 
 	return (
 		<section className='history-section' id='battleLogs'>
@@ -120,7 +124,7 @@ export default function PlayerHistory() {
 						<TransactionCard
 							key={transaction.id}
 							transaction={transaction}
-							battleIcon={getBattleIcon(transaction.battleResult)}
+							battleIcon={getBattleIcon(transaction.battle_result)}
 						/>
 					))
 				)}

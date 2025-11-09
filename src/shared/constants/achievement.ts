@@ -198,7 +198,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		rarity: 'epic',
 		condition: state =>
 			state.debt === 0 &&
-			state.transactionHistory.some(t => t.battleResult === 'critical'),
+			state.transactionHistory.some(t => t.battle_result === 'critical'),
 	},
 	{
 		id: 'debt-free-warrior',
@@ -209,7 +209,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		rarity: 'rare',
 		condition: state =>
 			state.transactionHistory.length >= 20 &&
-			!state.transactionHistory.some(t => t.battleResult === 'critical'),
+			!state.transactionHistory.some(t => t.battle_result === 'critical'),
 	},
 	{
 		id: 'debt-survivor',
@@ -220,7 +220,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		rarity: 'rare',
 		condition: state => {
 			const hadDebt = state.transactionHistory.some(
-				t => t.battleResult === 'critical',
+				t => t.battle_result === 'critical',
 			);
 			return hadDebt && state.debt === 0 && state.money >= 1000;
 		},
@@ -332,7 +332,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		rarity: 'rare',
 		condition: state => {
 			const totalExp = state.transactionHistory.reduce(
-				(sum, t) => sum + (t.expGained || 0),
+				(sum, t) => sum + (t.exp_gained || 0),
 				0,
 			);
 			return totalExp >= 1000;
@@ -347,7 +347,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		rarity: 'epic',
 		condition: state => {
 			const totalExp = state.transactionHistory.reduce(
-				(sum, t) => sum + (t.expGained || 0),
+				(sum, t) => sum + (t.exp_gained || 0),
 				0,
 			);
 			return totalExp >= 10000;
@@ -361,7 +361,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		category: 'special',
 		rarity: 'rare',
 		condition: state =>
-			state.transactionHistory.some(t => (t.expGained || 0) >= 500),
+			state.transactionHistory.some(t => (t.exp_gained || 0) >= 500),
 	},
 
 	// ============================================
@@ -432,7 +432,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		category: 'special',
 		rarity: 'epic',
 		condition: state =>
-			state.transactionHistory.filter(t => t.battleResult === 'victory')
+			state.transactionHistory.filter(t => t.battle_result === 'victory')
 				.length >= 50,
 	},
 	{
@@ -443,7 +443,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		category: 'special',
 		rarity: 'rare',
 		condition: state =>
-			state.transactionHistory.filter(t => t.battleResult === 'defeat')
+			state.transactionHistory.filter(t => t.battle_result === 'defeat')
 				.length >= 100,
 	},
 	{
@@ -454,7 +454,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 		category: 'special',
 		rarity: 'epic',
 		condition: state =>
-			state.transactionHistory.filter(t => t.battleResult === 'critical')
+			state.transactionHistory.filter(t => t.battle_result === 'critical')
 				.length >= 5 && state.debt === 0,
 	},
 

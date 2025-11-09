@@ -6,8 +6,8 @@ export type {
 	SignInData,
 	SignUpData,
 } from './auth';
-export type { Category, Transaction } from './transaction';
-
+export type { IDashboardStats } from './player.type';
+export type { Category, IFilter, Transaction } from './transaction';
 export interface CardInfo {
 	title: string;
 	description: string;

@@ -23,7 +23,7 @@ export function ExpProgressChart({
 
 		let totalExp = 0;
 		return sorted.map(t => {
-			const expChange = (t.expGained || 0) - (t.expLoosed || 0);
+			const expChange = (t.exp_gained || 0) - (t.exp_lost || 0);
 			totalExp += expChange;
 
 			return {

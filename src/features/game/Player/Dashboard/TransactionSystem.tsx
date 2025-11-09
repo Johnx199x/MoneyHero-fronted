@@ -3,6 +3,7 @@
 import './TransactionSystem.css';
 import type React from 'react';
 import { useState } from 'react';
+import { useTransactionContext } from '../../../../context/transationContext';
 import {
 	expenseCategories,
 	incomeCategories,
@@ -11,7 +12,6 @@ import type {
 	Category,
 	Transaction,
 } from '../../../../shared/types/index.type';
-import { usePlayerStore } from '../store/playerStore';
 import { sanitizeString, validateTransaction } from '../utils/validationUtils';
 import TransactionForm from './Components/TransactionForm';
 
@@ -21,6 +21,8 @@ interface ModalProps {
 }
 
 export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
+	const {createTransaction} = useTransactionContext()
+
 	const currentDate = new Date().toISOString().split('T')[0];
 
 	const categories =
@@ -35,7 +37,7 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 		category: 'other',
 		description: '',
 		date: currentDate,
-		battleResult: !isExpense ? 'victory' : 'defeat',
+		battle_result: !isExpense ? 'victory' : 'defeat',
 	};
 
 	const [warning, setWarning] = useState<string>('');
@@ -63,8 +65,6 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 			category: value as Category,
 		});
 	};
-
-	const { addTransaction } = usePlayerStore();
 
 	const handleModal = async (e?: React.FormEvent) => {
 		e?.preventDefault();
@@ -97,7 +97,7 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 				amount,
 			};
 
-			addTransaction(transactionToAdd);
+			await createTransaction(transactionToAdd);
 
 			setNewTransaction(initialTransaction);
 			setWarning('');
